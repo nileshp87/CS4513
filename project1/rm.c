@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h> 
+#include <libgen.h>
 
 #define _GNU_SOURCE
 
@@ -52,34 +53,93 @@ int main(int argc, char* argv[])
 		puts("Error: TRASH variable not set, please set $TRASH to a created directory.");
 		exit(1);
 	}
+	// Get the current working directory
 	cwd = get_current_dir_name();
-	printf("CWD: %s\n", cwd);
-	printf("TRASH: %s\n", TRASH);
-	printf("FD: %s\n", *(argv + i));
-	toAbsolute(*(argv + i));
-	rm(*(argv + i));
+	if(mode == 0)
+	{
+		for(; i < argc; i++){
+			rm(*(argv + i));
+		}
+	}
+	if(mode == 1)
+	{
+		for(; i < argc; i++){
+			rmf(*(argv + i));
+		}	
+	}
 }
 
+
+/** function: toAbsolute
+  * params: file to get absolute path of
+  * returns: absolute path to given file
+**/
 char *toAbsolute(char* file)
 {
+
 	if(!strncmp(file,"/",1))
-		puts(file);
-	else
-		printf("%s/%s\n",cwd,file);
-	return file;
+		return file;
+	char* abs = calloc(strlen(file)+strlen(cwd)+2,sizeof(char));
+	strcat(abs, cwd);
+	strcat(abs, "/");
+	strcat(abs, file);
+	return abs;
 }
 
 int rm(char* file)
 {
-	char* newpath = calloc(strlen(file) + strlen(TRASH) + 1, sizeof(char));
-	strcat(newpath, TRASH);
-	strcat(newpath, file);
-	int x = link(file, newpath);
-	printf("Status: %d\n", x);
-	int errsv = errno;
-	printf("Status: %s\n", strerror(errsv));
-	printf("NP: %s\n", newpath);
-	return x;
+	char* oldPath = toAbsolute(file);
+	char* orig = file;
+	char* base = basename(file);
+	char* newPath = calloc(strlen(TRASH) + strlen(base) + 5, sizeof(char));
+	char* suffix = newPath+(strlen(TRASH)+strlen(base) + 1);
+
+	strcat(newPath, TRASH);
+	strcat(newPath, "/");
+	strcat(newPath, base);
+
+	printf("rm %s -> %s\n", oldPath, newPath);
+	int l = link(oldPath, newPath);
+	int i = 0;
+	strcpy(suffix, ".0");
+	while(l == -1 && errno == EEXIST)
+	{
+		if(*(suffix)+1 == '9')
+		{
+			*(suffix+1) = '0';
+			suffix++;
+		}
+		(*(suffix+1))++;
+		l = link(oldPath, newPath);
+	}
+	if(l){
+		fprintf(stderr, "ERROR: %s\n", strerror(errno));
+		return errno == ENOENT ? E_NONEXIST : E_PERMISSION;
+	}
+	if(!l)
+		l = unlink(oldPath);
+	if(l){
+		fprintf(stderr, "ERROR: %s\n", strerror(errno));
+		return errno == ENOENT ? E_NONEXIST : E_PERMISSION;
+	}
+	free(newPath);
+	if(oldPath == orig)
+		free(oldPath);
+	return SUCCESS;
+}
+
+int rmf(char* file)
+{
+	char* oldPath = toAbsolute(file);
+	printf("rm -f %s \n", oldPath);
+	int l = unlink(oldPath);
+	if(l){
+		fprintf(stderr, "ERROR: %s\n", strerror(errno));
+		return errno == ENOENT ? E_NONEXIST : E_PERMISSION;
+	}
+	if(oldPath == file)
+		free(oldPath);
+	return SUCCESS;
 }
 
 void usage(char* name){

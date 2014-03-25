@@ -3,3 +3,6 @@ rm: rm.o
 	gcc rm.o -o rm
 rm.o: rm.c
 	gcc -c rm.c
+clean:
+	rm *.o
+	rm rm

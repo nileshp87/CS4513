@@ -1,0 +1,4 @@
+To Build:
+	make
+To Build Experiment:
+	make experiments

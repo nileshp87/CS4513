@@ -4,6 +4,9 @@
 #include <string.h>
 #include <errno.h> 
 #include <libgen.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #define _GNU_SOURCE
 
@@ -140,6 +143,20 @@ int rmf(char* file)
 	if(oldPath == file)
 		free(oldPath);
 	return SUCCESS;
+}
+
+int rmr(char *file)
+{
+	char* oldPath = toAbsolute(file);
+	char* orig = file;
+	char* base = basename(file);
+	char* newPath = calloc(strlen(TRASH) + strlen(base) + 5, sizeof(char));
+	char* suffix = newPath+(strlen(TRASH)+strlen(base) + 1);
+
+	strcat(newPath, TRASH);
+	strcat(newPath, "/");
+	strcat(newPath, base);
+
 }
 
 void usage(char* name){

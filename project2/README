@@ -1,0 +1,11 @@
+To Build:
+	make
+Usage:
+	Server:
+		./server [port]
+	Dshell:
+		./dsh [flags] <command>, where flags are:
+			{-c command}	command to execute remotely
+			{-s host}	host server to execute command on
+			[-p #]	port server is on (default is 6013)
+			[-h]	this help message

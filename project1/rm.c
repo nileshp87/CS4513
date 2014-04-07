@@ -4,18 +4,11 @@
 #include <string.h>
 #include <errno.h> 
 #include <libgen.h>
-<<<<<<< HEAD
-#include <dirent.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-=======
 #include <sys/types.h>
 #include <sys/stat.h>	
 #include <dirent.h>
 #include <fcntl.h>
 #include <utime.h>
-
->>>>>>> 5110e5d829865858fabb718b96fc7cc4da8ec95e
 
 #define _GNU_SOURCE
 
@@ -214,26 +207,17 @@ int rmf(char* file)
 	return SUCCESS;
 }
 
-<<<<<<< HEAD
-int rmr(char *file)
-=======
 int rmr(char* file, int end)
->>>>>>> 5110e5d829865858fabb718b96fc7cc4da8ec95e
 {
 	char* oldPath = toAbsolute(file);
 	char* orig = file;
 	char* base = basename(file);
-<<<<<<< HEAD
 	char* newPath = calloc(strlen(TRASH) + strlen(base) + 5, sizeof(char));
 	char* suffix = newPath+(strlen(TRASH)+strlen(base) + 1);
 
 	strcat(newPath, TRASH);
 	strcat(newPath, "/");
 	strcat(newPath, base);
-
-}
-=======
-	char* newPath = calloc(strlen(TRASH) + strlen(file) + 253, sizeof(char));
 
 	strcat(newPath, TRASH);
 	strcat(newPath, "/");
@@ -354,7 +338,6 @@ int rmrf(char* file, int end)
 	rmf(oldPath);
 }
 
->>>>>>> 5110e5d829865858fabb718b96fc7cc4da8ec95e
 
 void usage(char* name){
 	printf("Usage: %s [OPTIONS]... FILES...\n\tRemove FILES (send to recycle bin)\n\tOptions:\n\t\t-h\tDisplay this help message\n\t\t-r\tRecursive, remove directories and their contents\n\t\t-f\tforce, removes files permanently\n", name);

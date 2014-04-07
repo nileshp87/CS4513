@@ -1,7 +1,16 @@
-default: dsh
+default: dsh server
 
-dsh: dsh.c
-	gcc dsh.c -o dsh
+dsh: dsh.o
+	gcc dsh.o -lcrypt -o dsh
 
-server: server.c
-	gcc server.c -o server
+dsh.o: dsh.c
+	gcc -c dsh.c
+
+server: server.o
+	gcc -w server.o -lcrypt -o server
+
+server.o: server.c
+	gcc -w -c server.c
+
+clean:
+	rm -f *.o server dsh

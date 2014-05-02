@@ -1,0 +1,23 @@
+SAUCER SHOOT
+
+Final version of Saucer Shoot game from Dragonfly tutorial.
+
+To build:
+
+0) Make sure you have appropriate development environment.
+See: http://dragonfly.wpi.edu/engine/ for details.
+
+1) Modify Makefile as appropriate for platform
++ Uncommend PLATFORM line if on cygwin
++ Set INCPATH to point to location of Dragonfly include files
++ Set ENG to point to location of Dragonfly engine
+
+2) Type "make depend" to build appropriate dependencies
+
+3) Type "make clean" to remove any stale files
+
+4) Type "make" to build
+
+5) Type "game" to run
+
+Happy shooting!

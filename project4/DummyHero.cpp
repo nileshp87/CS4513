@@ -3,7 +3,6 @@
 //
 
 // engine includes
-#include "EventStep.h"
 #include "EventView.h"
 #include "GraphicsManager.h"
 #include "LogManager.h"
@@ -37,10 +36,7 @@ DummyHero::DummyHero() {
 
   // all input comes from network
   registerInterest(NETWORK_EVENT);
-  // need to update fire rate control each step
-  registerInterest(STEP_EVENT);
-
-  setType("DummyHero");
+  setType("Hero");
 
   // set starting location
   WorldManager &world_manager = WorldManager::getInstance();
@@ -80,11 +76,6 @@ int DummyHero::eventHandler(Event *p_e) {
     return 1;
   }
 
-  if (p_e->getType() == STEP_EVENT) {
-    step();
-    return 1;
-  }
-
   // if we get here, we have ignored this event
   return 0;
 }
@@ -92,22 +83,20 @@ int DummyHero::eventHandler(Event *p_e) {
 // call move (or do nothing) according to key pressed
 void DummyHero::net(EventNetwork *p_network_event) {
   WorldManager &world_manager = WorldManager::getInstance();
-
-  switch(p_keyboard_event->getKey()) {
-  case KEY_UP:			// up arrow
+  if(p_network_event->getTarget() != 'H')
+    return;
+  switch(p_network_event->getAction()) {
+  case 'U':			// up arrow
     move(-1);
     break;
-  case KEY_DOWN:		// down arrow
+  case 'D':		// down arrow
     move(+1);
     break;
-  case ' ':			// fire
+  case 'F':			// fire
     fire();
     break;
-  case 13:			// nuke!
+  case 'N':
     nuke();
-    break;
-  case 'q':			// quit
-    world_manager.markForDelete(this);
     break;
   };
   return;
@@ -130,13 +119,6 @@ void DummyHero::fire() {
     return;
   fire_countdown = fire_slowdown;
   new Bullet(getPosition());
-}
-
-// decrease fire restriction
-void DummyHero::step() {
-  fire_countdown--;
-  if (fire_countdown < 0)
-    fire_countdown = 0;
 }
 
 // send nuke event to all objects

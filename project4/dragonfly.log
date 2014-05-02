@@ -1,0 +1,15 @@
+06:06:57    0 *****************************************************
+06:06:57    0 ** Dragonfly version 2.7 **
+06:06:57    0 Log Manager started 
+06:06:57    0 GraphicsManager::startUp(): Terminal supports color.
+06:06:57    0 Graphics manager started
+06:06:57    0 Input manager started
+06:06:57    0 Resource manager started
+06:06:57    0 World manager started
+06:06:58   38 Pause::Pause(): Pause enabled. Use key F10 to toggle.
+06:07:00   47 World manager stopped
+06:07:00   47 Resource manager stopped
+06:07:00   47 Input manager stopped
+06:07:00   47 Graphics manager stopped
+06:07:00   47 ** Game stopped **
+06:07:00   47 *****************************************************

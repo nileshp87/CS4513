@@ -8,6 +8,7 @@
 #include "EventCollision.h"
 #include "EventNuke.h"
 #include "EventOut.h"
+#include "EventNetwork.h"
 #include "EventView.h"
 #include "LogManager.h"
 #include "ResourceManager.h"
@@ -17,6 +18,7 @@
 #include "Explosion.h"
 #include "Points.h"
 #include "ServerSaucer.h"
+#include "NetworkManager.h"
 
 ServerSaucer::ServerSaucer() {
   LogManager &log_manager = LogManager::getInstance();
@@ -33,7 +35,7 @@ ServerSaucer::ServerSaucer() {
   }
 
   // set object type
-  setType("ServerSaucer");
+  setType("Saucer");
 
   // set speed in vertical direction
   setXVelocity(-0.25);		// 1 space every 4 frames
@@ -129,9 +131,10 @@ void ServerSaucer::hit(EventCollision *p_c) {
 
 // move saucer to starting location on right side of screen
 void ServerSaucer::moveToStart() {
+  //NetworkManager &network_manager = NetworkManager::getInstance();
   WorldManager &world_manager = WorldManager::getInstance();
   Position temp_pos;
-
+  EventNetwork network_event;
   int world_horiz = world_manager.getBoundary().getHorizontal();
   int world_vert = world_manager.getBoundary().getVertical();
 
@@ -147,6 +150,7 @@ void ServerSaucer::moveToStart() {
     temp_pos.setX(temp_pos.getX()+1);
     collision_list = world_manager.isCollision(this, temp_pos);
   }
-
+  network_event = EventNetwork('S','C', temp_pos.getX(), temp_pos.getY());
+  //network_manager.onEvent(&network_event);
   world_manager.moveObject(this, temp_pos);
 }

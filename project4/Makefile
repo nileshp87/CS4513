@@ -33,7 +33,9 @@ GAMESRC= Saucer.cpp \
          ServerSaucer.cpp \
          ClientSaucer.cpp \
          ClientPoints.cpp \
-         ServerPoints.cpp
+         ServerPoints.cpp \
+				 EventNetwork.cpp \
+				 NetworkManager.cpp
 GAME= game.cpp
 EXECUTABLE= game		
 OBJECTS= $(GAMESRC:.cpp=.o)

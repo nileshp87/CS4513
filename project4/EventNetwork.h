@@ -12,20 +12,26 @@
 class EventNetwork : public Event {
   
  private:
-  int bytes;                    // number of bytes available                    
-  
+  char event[2];
+  int x;
+  int y;
  public:
   // Default constructor.                                                       
   EventNetwork();
 
   // Create object with initial bytes.
-  EventNetwork(int initial_bytes);
+  EventNetwork(char target, char action);
 
-  // Set number of bytes available.                                             
-  void setBytes(int new_bytes);
+  EventNetwork(char target, char action, int x, int y);
 
-  // Get number of bytes available.                                             
-  int getBytes();
+
+  char getTarget();
+
+  char getAction();
+
+  int getX();
+
+  int getY();
 };
 
 #endif // __EVENT_NETWORK_H__     

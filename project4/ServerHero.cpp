@@ -39,7 +39,7 @@ ServerHero::ServerHero() {
   // need to update fire rate control each step
   registerInterest(STEP_EVENT);
 
-  setType("ServerHero");
+  setType("Hero");
 
   // set starting location
   WorldManager &world_manager = WorldManager::getInstance();

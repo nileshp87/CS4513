@@ -115,8 +115,6 @@ void GameStart::startServer() {
 void GameStart::startClient() {
 				new DummyHero;
 				new ClientHero;
-				for (int i=0; i<16; i++)
-								new ClientSaucer;
 				new ClientPoints;
 				ViewObject *p_vo = new ViewObject; // used for nuke count
 				p_vo->setLocation(TOP_LEFT);

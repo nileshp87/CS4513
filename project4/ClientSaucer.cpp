@@ -1,152 +1,114 @@
 //
-// ClientSaucer.cpp
+//ClientSaucer.cpp
 //
 
-#include <stdlib.h>		// for random()
+#include <stdlib.h>		//forrandom()
 
-// engine includes
+//engineincludes
 #include "EventCollision.h"
 #include "EventNuke.h"
-#include "EventOut.h"
 #include "EventView.h"
+#include "EventOut.h"
 #include "LogManager.h"
 #include "ResourceManager.h"
 #include "WorldManager.h"
-
-// game includes
+#include "Position.h"
+//gameincludes
 #include "Explosion.h"
 #include "Points.h"
 #include "ClientSaucer.h"
+#include "EventNetwork.h"
 
-ClientSaucer::ClientSaucer() {
-  LogManager &log_manager = LogManager::getInstance();
-  ResourceManager &resource_manager = ResourceManager::getInstance();
-
-  // setup "saucer" sprite
-  Sprite *p_temp_sprite = resource_manager.getSprite("saucer");
-  if (!p_temp_sprite) {
-    log_manager.writeLog("ClientSaucer::ClientSaucer(): Warning! Sprite '%s' not found", 
-			 "saucer");
-  } else {
-    setSprite(p_temp_sprite);
-    setSpriteSlowdown(4);		
-  }
-
-  // set object type
-  setType("ClientSaucer");
-
-  // set speed in vertical direction
-  setXVelocity(-0.25);		// 1 space every 4 frames
-
-  moveToStart();
-
-  // register interest in "nuke" event
-  registerInterest(NUKE_EVENT);
+ClientSaucer::ClientSaucer(int x,int y){
+LogManager &log_manager=LogManager::getInstance();
+WorldManager &world_manager=WorldManager::getInstance();
+ResourceManager &resource_manager=ResourceManager::getInstance();
+Position temp_pos;
+temp_pos.setXY(x,y);
+//setup"saucer"sprite
+Sprite *p_temp_sprite=resource_manager.getSprite("saucer");
+if(!p_temp_sprite){
+log_manager.writeLog("ClientSaucer::ClientSaucer():Warning!Sprite'%s'notfound",
+			"saucer");
+}else{
+setSprite(p_temp_sprite);
+setSpriteSlowdown(4);		
 }
 
-ClientSaucer::~ClientSaucer() {
-  // send "view" event with points to interested ViewObjects
-  // add 10 points
-  EventView ev(POINTS_STRING, 10, true);
-  WorldManager &world_manager = WorldManager::getInstance();
-  world_manager.onEvent(&ev);
+//setobjecttype
+setType("ClientSaucer");
+
+//setspeedinverticaldirection
+setXVelocity(-0.25);		//1spaceevery4frames
+
+world_manager.moveObject(this,temp_pos);
+
+//registerinterestin"nuke"event
+registerInterest(NUKE_EVENT);
+registerInterest(OUT_EVENT);
 }
 
-// handle event
-// return 0 if ignored, else 1
-int ClientSaucer::eventHandler(Event *p_e) {
+//handleevent
+//return0ifignored,else1
+int ClientSaucer::eventHandler(Event *p_e){
 
-  if (p_e->getType() == OUT_EVENT) {
-    out();
-    return 1;
-  }
-
-  if (p_e->getType() == COLLISION_EVENT) {
-    EventCollision *p_collision_event = static_cast <EventCollision *> (p_e);
-    hit(p_collision_event);
-    return 1;
-  }
-
-  if (p_e->getType() == NUKE_EVENT) {
-
-    // create an explosion
-    Explosion *p_explosion = new Explosion;
-    p_explosion -> setPosition(this -> getPosition());
-
-    // delete self
-    WorldManager &world_manager = WorldManager::getInstance();
-    world_manager.markForDelete(this);
-
-    // ClientSaucers appear stay around perpetually
-    new ClientSaucer;
-  }
-
-  // if we get here, we have ignored this event
-  return 0;
+if(p_e->getType()==OUT_EVENT){
+out();
+return 1;
 }
 
-// if moved off left edge, move back to far right
-void ClientSaucer::out() {
-
-  // if we haven't moved off left edge, then nothing to do
-  if (getPosition().getX() >= 0)
-    return;
-
-  // otherwise, move back to far right
-  moveToStart();
-
-  // spawn a new ClientSaucer to make the game get harder
-  new ClientSaucer;
+if(p_e->getType()==COLLISION_EVENT){
+EventCollision *p_collision_event= static_cast <EventCollision *> (p_e);
+hit(p_collision_event);
+return 1;
 }
 
-// if saucer and player collide, mark both for deletion
-void ClientSaucer::hit(EventCollision *p_c) {
-  // if ClientSaucer on Saucer, ignore
-  if ((p_c -> getObject1() -> getType() == "ClientSaucer") &&
-      (p_c -> getObject2() -> getType() == "ClientSaucer"))
-    return;
+if(p_e->getType()==NUKE_EVENT){
 
-  // if Bullet 
-  if ((p_c -> getObject1() -> getType() == "Bullet") ||
-      (p_c -> getObject2() -> getType() == "Bullet")) {
+//createanexplosion
+Explosion *p_explosion=new Explosion;
+p_explosion->setPosition(this->getPosition());
 
-    // Create an explosion
-    Explosion *p_explosion = new Explosion;
-    p_explosion -> setPosition(this -> getPosition());
-
-    // ClientSaucers appear stay around perpetually
-    new ClientSaucer;
-  }
-
-  // if hero, mark both objects for destruction 
-  if (((p_c -> getObject1() -> getType()) == "Hero") || 
-      ((p_c -> getObject2() -> getType()) == "Hero")) {
-    WorldManager &world_manager = WorldManager::getInstance();
-    world_manager.markForDelete(p_c -> getObject1());
-    world_manager.markForDelete(p_c -> getObject2());
-  }
+//deleteself
+WorldManager&world_manager=WorldManager::getInstance();
+world_manager.markForDelete(this);
 }
 
-// move saucer to starting location on right side of screen
-void ClientSaucer::moveToStart() {
-  WorldManager &world_manager = WorldManager::getInstance();
-  Position temp_pos;
+//ifwegethere,wehaveignoredthisevent
+return 0;
+}
 
-  int world_horiz = world_manager.getBoundary().getHorizontal();
-  int world_vert = world_manager.getBoundary().getVertical();
+//ifmovedoffleftedge,movebacktofarright
+void ClientSaucer::out(){
 
-  // x is off the right side of screen
-  temp_pos.setX(world_horiz + random()%world_horiz + 3);
+WorldManager &world_manager=WorldManager::getInstance();
+world_manager.markForDelete(this);
+}
 
-  // y is in the vertical range
-  temp_pos.setY(random()%(world_vert-4) + 4);
+//ifsaucerandplayercollide,markbothfordeletion
+void ClientSaucer::hit(EventCollision*p_c){
+//ifClientSauceronSaucer,ignore
 
-  // if collision, move right slightly until empty space
-  ObjectList collision_list = world_manager.isCollision(this, temp_pos);
-  while (!collision_list.isEmpty()) {
-    temp_pos.setX(temp_pos.getX()+1);
-    collision_list = world_manager.isCollision(this, temp_pos);
-  }
+if((p_c->getObject1()->getType()=="ClientSaucer")&&
+(p_c->getObject2()->getType()=="ClientSaucer"))
+return;
 
-  world_manager.moveObject(this, temp_pos);
+//ifBullet
+if((p_c->getObject1()->getType()=="Bullet")||
+(p_c->getObject2()->getType()=="Bullet")){
+
+//Createanexplosion
+Explosion *p_explosion=new Explosion;
+p_explosion->setPosition(this->getPosition());
+
+//ClientSaucersappearstayaroundperpetually
+}
+
+//ifhero,markbothobjectsfordestruction
+if(((p_c->getObject1()->getType())=="Hero")||
+((p_c->getObject2()->getType())=="Hero")){
+WorldManager&world_manager=WorldManager::getInstance();
+world_manager.markForDelete(p_c->getObject1());
+world_manager.markForDelete(p_c->getObject2());
+}
 }

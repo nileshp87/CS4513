@@ -1,6 +1,6 @@
 frames 2
 width 70
-height 9
+height 12
 color default
      _____                               _____ __                __   
     / ___/____ ___  __________  _____   / ___// /_  ____  ____  / /_  
@@ -10,10 +10,10 @@ color default
                                                                       
      Controls: Arrows move, Space fires, Enter nukes, 'q' quits       
                                                                       
-                    Press 'p' to play
-                          'q' to quit                    
-                          's' to create a server
-                          'c' to connect to a server
+                    Press 'p' to play                                 
+                          'q' to quit                                 
+                          's' to create a server                      
+                          'c' to connect to a server                  
 end
      _____                               _____ __                __   
     / ___/____ ___  __________  _____   / ___// /_  ____  ____  / /_  
@@ -22,6 +22,9 @@ end
   /____/\__,_/\__,_/\___/\___/_/      /____/_/ /_/\____/\____/\__/    
                                                                       
      Controls: Arrows move, Space fires, Enter nukes, 'q' quits       
+                                                                      
+                                                                      
+                                                                      
                                                                       
                                                                       
 end

@@ -17,6 +17,8 @@
 #include "GameOver.h"
 #include "GameStart.h"
 #include "ClientHero.h"
+#include "EventNetwork.h"
+#include "NetworkManager.h"
 
 ClientHero::ClientHero() {
 
@@ -91,24 +93,33 @@ int ClientHero::eventHandler(Event *p_e) {
 // call move (or do nothing) according to key pressed
 void ClientHero::kbd(EventKeyboard *p_keyboard_event) {
   WorldManager &world_manager = WorldManager::getInstance();
-
+  char action='\0';
   switch(p_keyboard_event->getKey()) {
   case KEY_UP:			// up arrow
     move(-1);
+    action = 'U';
     break;
   case KEY_DOWN:		// down arrow
     move(+1);
+    action = 'D';
     break;
   case ' ':			// fire
     fire();
+    action = 'F';
     break;
   case 13:			// nuke!
     nuke();
+    action = 'N';
     break;
   case 'q':			// quit
     world_manager.markForDelete(this);
     break;
   };
+  if(action){
+    NetworkManager &network_manager = NetworkManager::getInstance();
+    EventNetwork network_event = EventNetwork('H', action);
+    network_manager.onEvent(&network_event);
+  }
   return;
 }
 

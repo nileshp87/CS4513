@@ -13,8 +13,7 @@ class ClientSaucer : public Object {
   void hit(EventCollision *p_c);
 
  public:
-  ClientSaucer();
-  ~ClientSaucer();
+  ClientSaucer(int x, int y);
   int eventHandler(Event *p_e);
 };
 

@@ -4,11 +4,14 @@
 // Manage network connections to/from engine. 
 // 
 
+#define DRAGONFLY_PORT "9109"
+#include "Manager.h"
+
 class NetworkManager : public Manager {
 
  private:
   NetworkManager();                       // Private since a singleton.
-  NetworkManager(NetworkManager const&);  // Don't allow copy.
+  NetworkManager(NetworkManager const &s);  // Don't allow copy.
   void operator=(NetworkManager const&);  // Don't allow assignment.
   int sock;                               // Connected network socket.
   

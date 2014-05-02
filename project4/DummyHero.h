@@ -3,7 +3,7 @@
 //
 
 #include "Object.h"
-#include "EventKeyboard.h"
+#include "EventNetwork.h"
 
 class DummyHero : public Object {
 
@@ -11,7 +11,7 @@ class DummyHero : public Object {
   int fire_slowdown;
   int fire_countdown;
   int nuke_count;
-  void kbd(EventKeyboard *keyboard_event);
+  void net(EventNetwork *network_event);
   void move(int dy);
   void fire();
   void step();

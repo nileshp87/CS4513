@@ -1,0 +1,22 @@
+To Make:
+	make
+
+To Clean:
+	make clean
+
+Descriptions:
+	player: independent player, plays local files
+	nutella: the server and client executable, mode depends on flag (-c for client, -s for server)
+
+To Run Client:
+	./nutella -c
+
+To Run Server:
+	./nutella -s
+
+To Run Player:
+	./player [file]
+
+Note:
+	Nutella server will use the directory stored in $NUTELLA for the path to movies,
+	it will non recursively search when query comes in.

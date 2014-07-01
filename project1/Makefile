@@ -3,9 +3,9 @@ experiments: timelink
 timelink: timelink.c
 	gcc timelink.c -o timelink
 rm: rm.o
-	gcc rm.o -o rm
+	gcc -m32 rm.o -o rm
 rm.o: rm.c
-	gcc -c rm.c
+	gcc -m32 -c rm.c
 dv: dv.o
 	gcc dv.o -o dv
 dv.o: dv.c
